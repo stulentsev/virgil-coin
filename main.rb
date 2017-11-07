@@ -7,6 +7,17 @@ require_relative 'api_wrapper'
 
 wrapper = ApiWrapper.new
 
+def print_ps_banner(data)
+  ps_cost = 100_000_000_000
+  time_to_ps = ((ps_cost - data.points) / data.pointsPerSecond).round
+  from_now = (Time.now + time_to_ps).strftime('%H:%M:%S')
+  puts ('-' * 80).yellowish
+  puts '|'.yellowish +
+         "Time until can buy PS: #{time_to_ps.round} secs (or #{secs_to_time(time_to_ps)} (tomorrow at #{from_now}))".center(78) +
+         '|'.yellowish
+  puts ('-' * 80).yellowish
+end
+
 def pretty_sleep(secs)
   progress = ProgressBar.create(total: secs, title: "Sleeping")
   secs.to_i.times do
@@ -28,10 +39,17 @@ def can_buy_unit?(unit, data)
   eta(unit, data) < 0
 end
 
+def secs_to_time(secs)
+  hours, secs = secs.divmod(3600)
+  mins, secs = secs.divmod(60)
+  "%02d:%02d:%02d" % [hours, mins, secs]
+end
+
 loop do
   data = wrapper.init.data
-  # ap data.points
-  # ap data.pointsPerSecond
+
+  print_ps_banner(data)
+
   units_by_profit = data.units.sort_by do |unit|
     unit.costPerCoin = unit.cost.send('1').fdiv(unit.itemProduction).round
   end
@@ -59,7 +77,7 @@ loop do
   best_unit = units_by_profit.first
   if can_buy_unit?(best_unit, data)
     wrapper.build(best_unit.type)
-    puts "Bought #{best_unit.type}!".yellowish
+    puts "Bought #{best_unit.type}!".redish
   end
 
   pretty_sleep(eta(best_unit, data))
