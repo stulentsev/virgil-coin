@@ -13,6 +13,8 @@ def pretty_sleep(secs)
     sleep(1)
     progress.increment
   end
+rescue
+  # do nothing
 end
 
 def eta(unit, data)
