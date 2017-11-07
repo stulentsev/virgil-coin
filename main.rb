@@ -77,7 +77,7 @@ loop do
   best_unit = units_by_profit.first
   if can_buy_unit?(best_unit, data)
     wrapper.build(best_unit.type)
-    puts "Bought #{best_unit.type}!".redish
+    puts "\aBought #{best_unit.type}!".redish
   end
 
   pretty_sleep(eta(best_unit, data))
