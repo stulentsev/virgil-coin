@@ -1,12 +1,19 @@
 require 'awesome_print'
 require 'json'
 require 'ostruct'
+require 'ruby-progressbar'
 
 require_relative 'api_wrapper'
 
 wrapper = ApiWrapper.new
-# ap wrapper.account
-#
+
+def pretty_sleep(secs)
+  progress = ProgressBar.create(total: secs, title: "Sleeping")
+  secs.to_i.times do
+    sleep(1)
+    progress.increment
+  end
+end
 
 def eta(unit, data)
   cost = unit.cost.send('1')
@@ -47,10 +54,11 @@ loop do
     puts msg
   end
 
-  if can_buy_unit?(units_by_profit.first, data)
-    wrapper.build(units_by_profit.first.type)
+  best_unit = units_by_profit.first
+  if can_buy_unit?(best_unit, data)
+    wrapper.build(best_unit.type)
+    puts "Bought #{best_unit.type}!".yellowish
   end
 
-  puts '-' * 80
-  sleep(1)
+  pretty_sleep(eta(best_unit, data))
 end
