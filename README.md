@@ -4,7 +4,7 @@
 Install missing gems
 
 ```
-gem install net-http2 awesome_print json ruby-progressbar
+gem install net-http2 awesome_print json ruby-progressbar terminal-table
 ```
 
 Then start the poller
