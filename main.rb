@@ -116,8 +116,8 @@ loop do
     best_unit = units_by_profit.first
 
     maybe_buy_unit(best_unit, data)
-    sleep(3)
-    # pretty_sleep(eta(best_unit, data))
+    # sleep(3)
+    pretty_sleep(eta(best_unit, data))
   rescue => ex
     puts ex.message
     puts ex.backtrace
