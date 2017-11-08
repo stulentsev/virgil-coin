@@ -18,9 +18,11 @@ class ApiWrapper
       click_timestamps: [],
       unit: unit_name,
     }
-    # ap params
-    # ap params.to_json
     post('/api/build', params)
+  end
+
+  def top
+    get('/api/top')
   end
 
   private

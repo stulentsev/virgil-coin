@@ -65,12 +65,8 @@ def secs_to_moment(secs)
 end
 
 def maybe_buy_unit(best_unit, data)
-  unless should_buy_unit?(best_unit, data)
-    `say Buy play station now!`
-    return
-  end
-
   if can_buy_unit?(best_unit, data)
+    return unless should_buy_unit?(best_unit, data)
     @wrapper.build(best_unit.type)
     msg = "Bought #{best_unit.type}!"
     puts msg.redish
@@ -84,13 +80,14 @@ loop do
 
     print_ps_banner(data)
 
-    units_by_profit = data.units.sort_by do |unit|
+    units_by_profit = data.units.reject do |unit|
+      unit.type == 'QuantumComputer'
+    end.sort_by do |unit|
       unit.costPerCoin = unit.cost.send('1').fdiv(unit.itemProduction).round
     end
 
     rows = units_by_profit.map do |unit|
       time           = eta(unit, data)
-      new_time_to_ps = calc_time_to_ps(data, unit.itemProduction)
 
       [
         unit.type,
