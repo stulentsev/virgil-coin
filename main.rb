@@ -87,9 +87,7 @@ loop do
 
     print_ps_banner(data)
 
-    units_by_profit = data.units.reject do |unit|
-      unit.type == 'QuantumComputer'
-    end.sort_by do |unit|
+    units_by_profit = data.units.sort_by do |unit|
       unit.costPerCoin = unit.cost.send('1').fdiv(unit.itemProduction).round
     end
 
