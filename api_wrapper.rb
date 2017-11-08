@@ -33,7 +33,8 @@ class ApiWrapper
 
   def headers
     {
-      'cookie' => 'crypto_cookies.sid=s%3AgW3o-VwQwQFCERR2_Wv6MDvu_Jocs2Af.OcCaCCX8V3PXwYjWoy36JncdZirCTppdx0EzDd8VKCA; __cfduid=d41ce25375b1c27291ac4ce0e0537fb8b1510046650; __cflb=1172794474',
+      # 'cookie' => 'crypto_cookies.sid=s%3AgW3o-VwQwQFCERR2_Wv6MDvu_Jocs2Af.OcCaCCX8V3PXwYjWoy36JncdZirCTppdx0EzDd8VKCA; __cfduid=d41ce25375b1c27291ac4ce0e0537fb8b1510046650; __cflb=1172794474',
+      'cookie' => 'crypto_cookies.sid=s%3AHDTvy8iIt0zt0tVtUS_rHmVg7PCwCmYO.PKBuO20cbBLoyEfu9WIFWyvsI9Bd8UOfT4fXsDvVRU8; __cfduid=d41ce25375b1c27291ac4ce0e0537fb8b1510046650; __cflb=318098826',
       # 'cookie' => 'crypto_cookies.sid=s%3AOhfgqR-dorUiaCUFI-8qEdb9yppMNfXh.wuPGIA78LN%2B%2FPlIBqMVZ1DKj7U9Q3sNSJPp9i8qNuaw; __cfduid=d2234986ab72915df40647f1b09657a341510073347; __cflb=318098826',
       'content-type' => 'application/json',
     }

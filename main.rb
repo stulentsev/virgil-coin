@@ -8,7 +8,7 @@ require_relative 'api_wrapper'
 def calc_time_to_ps(data, rate_delta: 0, points_delta: 0)
   ps_cost        = 100_000_000_000
   remaining_cost = ps_cost - data.points + points_delta
-  rate           = data.pointsPerSecond + delta
+  rate           = data.pointsPerSecond + rate_delta
 
   (remaining_cost / rate).round
 end
@@ -44,9 +44,9 @@ def eta(unit, data)
 end
 
 def should_buy_unit?(unit, data)
+  base_ps_eta          = calc_time_to_ps(data)
   is_cheaper_than_ps = eta(unit, data) < base_ps_eta
 
-  base_ps_eta          = calc_time_to_ps(data)
   ps_eta_with_new_unit = calc_time_to_ps(
     data,
     rate_delta:   unit.itemProduction,
@@ -116,7 +116,8 @@ loop do
     best_unit = units_by_profit.first
 
     maybe_buy_unit(best_unit, data)
-    pretty_sleep(eta(best_unit, data))
+    sleep(3)
+    # pretty_sleep(eta(best_unit, data))
   rescue => ex
     puts ex.message
     puts ex.backtrace
