@@ -1,16 +1,13 @@
-require 'awesome_print'
-require 'json'
-require 'ostruct'
-require 'ruby-progressbar'
-require 'terminal-table'
+require 'bundler'
+Bundler.require
 
 require_relative 'api_wrapper'
 
 @wrapper = ApiWrapper.new
 
-def calc_time_to_ps(data, delta = 0)
+def calc_time_to_ps(data, rate_delta: 0, points_delta: 0)
   ps_cost        = 100_000_000_000
-  remaining_cost = ps_cost - data.points
+  remaining_cost = ps_cost - data.points + points_delta
   rate           = data.pointsPerSecond + delta
 
   (remaining_cost / rate).round
@@ -47,7 +44,17 @@ def eta(unit, data)
 end
 
 def should_buy_unit?(unit, data)
-  eta(unit, data) < calc_time_to_ps(data)
+  is_cheaper_than_ps = eta(unit, data) < base_ps_eta
+
+  base_ps_eta          = calc_time_to_ps(data)
+  ps_eta_with_new_unit = calc_time_to_ps(
+    data,
+    rate_delta:   unit.itemProduction,
+    points_delta: -unit.cost.send('1')
+  )
+  will_shorten_time    = base_ps_eta > ps_eta_with_new_unit
+
+  is_cheaper_than_ps && will_shorten_time
 end
 
 def can_buy_unit?(unit, data)
@@ -87,7 +94,7 @@ loop do
     end
 
     rows = units_by_profit.map do |unit|
-      time           = eta(unit, data)
+      time = eta(unit, data)
 
       [
         unit.type,

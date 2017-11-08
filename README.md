@@ -1,10 +1,12 @@
 ### How to use
 
 
+You need ruby 2.4.2 (or any recent ruby should do).
+
 Install missing gems
 
 ```
-gem install net-http2 awesome_print json ruby-progressbar terminal-table
+bundle install
 ```
 
 Then start the poller

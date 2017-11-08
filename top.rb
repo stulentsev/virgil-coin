@@ -1,8 +1,5 @@
-require 'awesome_print'
-require 'json'
-require 'ostruct'
-require 'ruby-progressbar'
-require 'terminal-table'
+require 'bundler'
+Bundler.require
 
 require_relative 'api_wrapper'
 
