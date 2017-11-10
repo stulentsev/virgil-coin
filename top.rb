@@ -32,7 +32,7 @@ def time_to_ps(user)
 end
 
 my_id        = '4928530031813'
-SLEEP_PERIOD = 120
+SLEEP_PERIOD = 30
 
 last_top = []
 
@@ -46,7 +46,6 @@ loop do
       'wealth',
       'distance',
       'distance change/sec',
-      'time to ps',
     ]
 
     me   = users.detect { |u| u.ticketNumber == my_id }
@@ -61,7 +60,6 @@ loop do
           user.totalWealth.to_i,
           '-',
           '-',
-          secs_to_moment(time_to_ps(user)),
         ]
 
       else
@@ -73,13 +71,8 @@ loop do
           user.totalWealth.to_i,
           human_distance(distance),
           human_distance((distance - last_distance) / SLEEP_PERIOD),
-          secs_to_moment(time_to_ps(user)),
         ]
       end
-    end.sort_by(&:last).tap do |aary|
-      aary[0][-1] = aary[0][-1].to_s.greenish if aary[0][1] == 'ME!'
-      aary[1][-1] = aary[1][-1].to_s.yellowish if aary[1][1] == 'ME!'
-      aary[2][-1] = aary[2][-1].to_s.yellowish if aary[2][1] == 'ME!'
     end
 
     puts Terminal::Table.new(

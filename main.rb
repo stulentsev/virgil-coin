@@ -7,7 +7,7 @@ require_relative 'api_wrapper'
 
 def calc_time_to_ps(data, rate_delta: 0, points_delta: 0)
   ps_cost        = 100_000_000_000
-  remaining_cost = ps_cost - data.points + points_delta
+  remaining_cost = ps_cost #- data.points + points_delta
   rate           = data.pointsPerSecond + rate_delta
 
   (remaining_cost / rate).round
@@ -16,12 +16,11 @@ end
 def print_ps_banner(data)
   time_to_ps = calc_time_to_ps(data)
 
-  from_now = secs_to_moment(time_to_ps)
-  puts ('-' * 80).yellowish
+  puts ('-' * 61).yellowish
   puts '|'.yellowish +
-         "Time until can buy PS: #{time_to_ps.round} secs (or #{secs_to_time(time_to_ps)} (tomorrow at #{from_now}))".center(78) +
+         "Time until can buy PS: #{time_to_ps.round} secs (or #{secs_to_time(time_to_ps)})".center(59) +
          '|'.yellowish
-  puts ('-' * 80).yellowish
+  puts ('-' * 61).yellowish
 end
 
 def pretty_sleep(secs)
@@ -33,7 +32,7 @@ def pretty_sleep(secs)
 rescue
   # do nothing
 ensure
-  sleep(1) # just in case
+  sleep(0.2) # just in case
 end
 
 def eta(unit, data)
@@ -67,13 +66,9 @@ def secs_to_time(secs)
   "%02d:%02d:%02d" % [hours, mins, secs]
 end
 
-def secs_to_moment(secs)
-  (Time.now + secs).strftime('%H:%M:%S')
-end
-
 def maybe_buy_unit(best_unit, data)
   if can_buy_unit?(best_unit, data)
-    return unless should_buy_unit?(best_unit, data)
+    # return unless should_buy_unit?(best_unit, data)
     @wrapper.build(best_unit.type)
     msg = "Bought #{best_unit.type}!"
     puts msg.redish
@@ -86,7 +81,6 @@ loop do
     data = @wrapper.init.data
 
     print_ps_banner(data)
-
     units_by_profit = data.units.sort_by do |unit|
       unit.costPerCoin = unit.cost.send('1').fdiv(unit.itemProduction).round
     end
@@ -98,7 +92,7 @@ loop do
         unit.type,
         unit.costPerCoin,
         unit.itemProduction,
-        time < 0 ? 'NOW' : "in #{time.round} seconds",
+        time < 0 ? 'NOW' : secs_to_time(time),
       ]
     end
     puts Terminal::Table.new(
